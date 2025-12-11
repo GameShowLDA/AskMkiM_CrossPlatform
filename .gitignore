@@ -416,3 +416,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/AskMkiM/.idea
+AskMkiM/.DS_Store
+AskMkiM/AskConsole/.DS_Store
+.DS_Store
