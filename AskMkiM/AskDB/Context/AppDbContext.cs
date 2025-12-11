@@ -8,29 +8,30 @@ namespace AskDB.Context;
 public partial class AppDbContext : DbContext
 {
   /// <summary>
-  /// Конфигурация базы данных.
+  /// Конструктор, принимающий параметры конфигурации.
   /// </summary>
-  /// <param name="optionsBuilder">
-  /// Построитель параметров контекста базы данных. Используется для задания параметров подключения.
-  /// </param>
+  public AppDbContext(DbContextOptions<AppDbContext> options)
+    : base(options) { }
+
+  /// <summary>
+  /// Fallback-конфигурация — используется только если контекст
+  /// создан без передачи DbContextOptions.
+  /// В нормальной работе проекта этот блок вызываться не должен.
+  /// </summary>
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {
-    // if (optionsBuilder.IsConfigured == false)
-    // {
-    //   string basePath = Path.Combine(
-    //     Path.GetDirectoryName(AppContext.BaseDirectory), DataBaseConfig.ConfigFilePath
-    //   );
-    //
-    //   optionsBuilder.UseSqlite($"Data Source={basePath}");
-    // }
+    if (!optionsBuilder.IsConfigured)
+    {
+      // Берём корректный путь напрямую из DataBaseConfig
+      string dbPath = DataBaseConfig.DbFilePath;
+
+      optionsBuilder.UseSqlite($"Data Source={dbPath}");
+    }
   }
 
   /// <summary>
-  /// Настройка моделей базы данных.
+  /// Настройка моделей БД.
   /// </summary>
-  /// <param name="modelBuilder">
-  /// Построитель моделей, используемый для конфигурации сущностей и их связей в базе данных.
-  /// </param>
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     // modelBuilder.ApplyConfiguration(new MeasurementErrorEntityConfiguration());
@@ -39,12 +40,4 @@ public partial class AppDbContext : DbContext
 
     base.OnModelCreating(modelBuilder);
   }
-
-  /// <summary>
-  /// Инициализирует новый экземпляр контекста базы данных <see cref="AppDbContext"/>.
-  /// </summary>
-  /// <param name="options">
-  /// Параметры конфигурации контекста, включая источник данных и поведение подключения.
-  /// </param>
-  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 }

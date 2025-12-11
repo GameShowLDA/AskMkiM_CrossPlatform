@@ -1,4 +1,5 @@
-﻿using LogLib;
+﻿using AskDB;
+using LogLib;
 using LogLib.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,30 +10,24 @@ var services = new ServiceCollection();
 services.AddLogLib();
 
 var provider = services.BuildServiceProvider();
-
-// Получаем ILogService
 var log = provider.GetRequiredService<ILogService>();
 
 Console.WriteLine("Hello World from AskConsole!");
 
-// Логируем обычные сообщения
-log.Info("Приложение запущено.");
-log.Warn("Это предупреждение.");
-log.Error("Это ошибка.");
+// ============================
+//   ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ
+// ============================
 
-// Логируем исключение
 try
 {
-  throw new InvalidOperationException("Тестовое исключение");
+  log.Info("Инициализация базы данных начата...");
+  await DataBaseConfig.InitializeAsync();
+  log.Info("Инициализация базы данных завершена успешно.");
 }
 catch (Exception ex)
 {
-  log.Exception(ex, "Произошло исключение при тестировании LogLib");
+  log.Exception(ex, "Ошибка при инициализации базы данных");
 }
 
-// Тестируем device-лог
-log.Info("Команда к устройству отправлена.", isDeviceLog: true);
-
-Console.WriteLine("Логи записаны. Проверь папку ./logs/");
-
+Console.WriteLine("Готово. Нажмите Enter для выхода.");
 Console.ReadLine();
