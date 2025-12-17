@@ -4,9 +4,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AskMain", "AskMain\AskMain.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AskConsole", "AskConsole\AskConsole.csproj", "{0F91E64A-81CE-471A-8CA4-F7ABCA0C6FCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AskDB", "AskDB\AskDB.csproj", "{660308CE-99DD-448C-9D1D-B5ADBCF97D3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.DB", "Ask.DB\Ask.DB.csproj", "{660308CE-99DD-448C-9D1D-B5ADBCF97D3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogLib", "LogLib\LogLib.csproj", "{7A68B713-93E7-4E26-AFA3-D28D9D95E9C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.Shared", "Ask.Shared\Ask.Shared.csproj", "{82ED0231-0721-4D5F-B8F5-4ED505DF1DAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.UI", "Ask.UI\Ask.UI.csproj", "{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +34,13 @@ Global
 		{7A68B713-93E7-4E26-AFA3-D28D9D95E9C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A68B713-93E7-4E26-AFA3-D28D9D95E9C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A68B713-93E7-4E26-AFA3-D28D9D95E9C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82ED0231-0721-4D5F-B8F5-4ED505DF1DAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82ED0231-0721-4D5F-B8F5-4ED505DF1DAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82ED0231-0721-4D5F-B8F5-4ED505DF1DAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82ED0231-0721-4D5F-B8F5-4ED505DF1DAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

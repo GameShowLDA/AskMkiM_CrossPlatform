@@ -1,0 +1,9 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <Color x:Key="MessageColor_Info">#FFFFFFFF</Color>
+    <Color x:Key="MessageColor_Success">#4FCD65</Color>
+    <Color x:Key="MessageColor_Error">#F1301B</Color>
+    <Color x:Key="MessageColor_Command">#FFFF00</Color>
+    <Color x:Key="MessageColor_CommandBlock">#ADD8E6</Color>
+
+</ResourceDictionary>
