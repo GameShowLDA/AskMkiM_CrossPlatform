@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace AskMkiM.DevConsole;
+namespace Ask.DevConsole;
 
 public partial class App : Application
 {

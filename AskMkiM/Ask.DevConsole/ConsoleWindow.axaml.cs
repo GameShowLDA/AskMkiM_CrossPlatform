@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace AskMkiM.DevConsole;
+namespace Ask.DevConsole;
 
 public partial class ConsoleWindow : Window
 {

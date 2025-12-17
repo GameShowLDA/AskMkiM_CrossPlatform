@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.Shared", "Ask.Shared\As
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.UI", "Ask.UI\Ask.UI.csproj", "{2AFD87C0-4ED2-4DC8-B1F5-27B8C364545A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AskMkiM.DevConsole", "AskMkiM.DevConsole\AskMkiM.DevConsole.csproj", "{A1F3D748-0603-4B69-9A50-7AAD021E0BE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ask.DevConsole", "Ask.DevConsole\Ask.DevConsole.csproj", "{A1F3D748-0603-4B69-9A50-7AAD021E0BE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
