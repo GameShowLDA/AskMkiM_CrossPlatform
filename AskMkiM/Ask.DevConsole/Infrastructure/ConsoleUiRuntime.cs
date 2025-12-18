@@ -1,78 +1,74 @@
-using System;
 using System.Threading;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
 namespace Ask.DevConsole.Infrastructure;
 
 /// <summary>
-/// Инфраструктурный компонент, инкапсулирующий запуск Avalonia Developer Console
-/// в отдельном UI-потоке с собственным Dispatcher.
+/// Инфраструктурный компонент, отвечающий за создание и управление
+/// окном Developer Console внутри уже запущенного Avalonia-приложения.
 ///
-/// Класс полностью изолирует UI-логику консоли от основного приложения
-/// и не допускает прямого доступа к элементам Avalonia извне.
+/// Класс не инициализирует Avalonia и не создаёт Application.
+/// Использует существующий UI Dispatcher основного приложения.
+///
+/// Предназначен для использования исключительно через ConsoleHost
+/// и не предоставляет прямого доступа к UI элементам.
 /// </summary>
 internal sealed class ConsoleUiRuntime
 {
   /// <summary>
-  /// Главное окно Developer Console.
-  /// Создаётся и используется исключительно внутри UI-потока консоли.
+  /// Окно Developer Console.
+  /// Создаётся и используется исключительно в UI-диспетчере Avalonia.
   /// </summary>
   private Window? _window;
 
   /// <summary>
-  /// Диспетчер UI-потока Developer Console.
-  /// Используется для безопасного выполнения операций с UI
-  /// из внешних потоков.
+  /// Диспетчер UI-потока, в котором работает окно Developer Console.
+  /// Используется для потокобезопасного взаимодействия с UI.
   /// </summary>
   private Dispatcher? _dispatcher;
 
   /// <summary>
   /// Синхронизатор, сигнализирующий о завершении инициализации UI.
-  /// Гарантирует, что операции Show/Hide не будут выполнены
-  /// до создания окна и Dispatcher.
+  /// Гарантирует, что операции отображения и скрытия окна
+  /// не будут выполнены до создания Dispatcher и окна.
   /// </summary>
   private readonly ManualResetEventSlim _initialized = new(false);
 
   /// <summary>
-  /// Признак того, что UI-поток Developer Console запущен
-  /// и Avalonia Application находится в состоянии выполнения.
+  /// Признак того, что UI-логика Developer Console запущена
+  /// и готова к приёму команд.
   /// </summary>
   public bool IsRunning { get; private set; }
 
   /// <summary>
-  /// Признак того, что окно Developer Console в данный момент отображается пользователю.
+  /// Признак того, что окно Developer Console в данный момент
+  /// отображается пользователю.
   /// </summary>
   public bool IsVisible { get; private set; }
 
   /// <summary>
-  /// Точка входа UI-потока Developer Console.
-  /// Метод должен вызываться исключительно из отдельного фонового потока.
+  /// Запускает UI-логику Developer Console.
   ///
-  /// Инициализирует Avalonia Application и запускает собственный
-  /// Dispatcher UI-потока.
+  /// Метод вызывается из фонового потока и инициализирует
+  /// окно консоли в существующем UI-диспетчере Avalonia.
   /// </summary>
   public void Run()
   {
     IsRunning = true;
 
-    BuildAvaloniaApp()
-      .Start(AppMain, null);
+    Dispatcher.UIThread.Post(InitializeUi);
 
-    IsRunning = false;
+    _initialized.Wait();
   }
 
   /// <summary>
-  /// Основная функция Avalonia Application,
-  /// выполняемая внутри UI-потока Developer Console.
+  /// Инициализирует UI-компоненты Developer Console.
   ///
-  /// Здесь создаётся Dispatcher, инициализируется окно консоли
-  /// и запускается цикл обработки сообщений UI.
+  /// Метод выполняется строго в UI-диспетчере Avalonia.
+  /// Здесь создаётся окно консоли и настраиваются его параметры.
   /// </summary>
-  /// <param name="app">Экземпляр Avalonia Application.</param>
-  /// <param name="args">Аргументы командной строки (не используются).</param>
-  private void AppMain(Application app, string[]? args)
+  private void InitializeUi()
   {
     _dispatcher = Dispatcher.UIThread;
 
@@ -84,15 +80,16 @@ internal sealed class ConsoleUiRuntime
       ShowInTaskbar = false
     };
 
-    _window.Closed += (_, _) => { IsVisible = false; };
+    _window.Closed += (_, _) => IsVisible = false;
 
     _initialized.Set();
-    app.Run(_window);
   }
 
   /// <summary>
-  /// Делает окно Developer Console видимым для пользователя.
+  /// Отображает окно Developer Console пользователю.
+  ///
   /// Метод потокобезопасен и может вызываться из любого потока.
+  /// Если окно уже отображено, повторный вызов не имеет эффекта.
   /// </summary>
   public void Show()
   {
@@ -114,8 +111,10 @@ internal sealed class ConsoleUiRuntime
   }
 
   /// <summary>
-  /// Скрывает окно Developer Console, не уничтожая UI-поток.
+  /// Скрывает окно Developer Console, не уничтожая UI-логику.
+  ///
   /// Метод потокобезопасен и может вызываться из любого потока.
+  /// UI-диспетчер и окно остаются активными.
   /// </summary>
   public void Hide()
   {
@@ -131,8 +130,9 @@ internal sealed class ConsoleUiRuntime
 
   /// <summary>
   /// Переключает видимость окна Developer Console.
-  /// Если окно отображается — оно будет скрыто,
-  /// если скрыто — показано.
+  ///
+  /// Если окно отображается — оно будет скрыто.
+  /// Если окно скрыто — будет показано.
   /// </summary>
   public void Toggle()
   {
@@ -143,28 +143,17 @@ internal sealed class ConsoleUiRuntime
   }
 
   /// <summary>
-  /// Запрашивает корректное завершение UI-потока Developer Console.
-  /// Закрывает окно консоли, что приводит к завершению
-  /// цикла обработки сообщений Avalonia.
+  /// Запрашивает корректное завершение работы Developer Console.
+  ///
+  /// Закрывает окно консоли и переводит компонент
+  /// в неактивное состояние без остановки Avalonia runtime.
   /// </summary>
   public void RequestStop()
   {
     _dispatcher?.Post(() =>
     {
       _window?.Close();
+      IsRunning = false;
     });
-  }
-
-  /// <summary>
-  /// Создаёт и настраивает AppBuilder для Avalonia Application,
-  /// используемой Developer Console.
-  /// </summary>
-  /// <returns>Сконфигурированный экземпляр AppBuilder.</returns>
-  private static AppBuilder BuildAvaloniaApp()
-  {
-    return AppBuilder
-      .Configure<App>()
-      .UsePlatformDetect()
-      .LogToTrace();
   }
 }
