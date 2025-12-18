@@ -28,18 +28,13 @@ public partial class App : Application
   /// </summary>
   public override void OnFrameworkInitializationCompleted()
   {
-    var applicationStartup = new ApplicationStartup();
-    applicationStartup.Run();
-
     if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
     {
-      // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-      // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
-      DisableAvaloniaDataAnnotationValidation();
-      desktop.MainWindow = new MainWindow
-      {
-        DataContext = new MainWindowViewModel(),
-      };
+      var mainWindow = new MainWindow();
+      desktop.MainWindow = mainWindow;
+
+      var startup = new ApplicationStartup();
+      startup.Run(mainWindow);
     }
 
     base.OnFrameworkInitializationCompleted();

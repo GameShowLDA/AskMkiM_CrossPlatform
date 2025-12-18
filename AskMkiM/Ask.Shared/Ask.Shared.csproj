@@ -10,4 +10,8 @@
       <Folder Include="Models\Devices\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.3.9" />
+    </ItemGroup>
+
 </Project>

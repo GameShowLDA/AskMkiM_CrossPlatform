@@ -101,21 +101,11 @@ public sealed class ConsoleHost : IDeveloperConsole, IDisposable
     {
       if (_runtime is null)
         return;
-
-      /// <summary>
-      /// Запрашиваем завершение UI-рантайма.
-      /// </summary>
+      
       _runtime.RequestStop();
-
-      /// <summary>
-      /// Запоминаем ссылку на поток, чтобы выполнить Join вне lock.
-      /// </summary>
       threadToJoin = _uiThread;
     }
-
-    /// <summary>
-    /// Дожидаемся завершения UI-потока без удержания блокировки.
-    /// </summary>
+    
     threadToJoin?.Join();
 
     lock (_sync)

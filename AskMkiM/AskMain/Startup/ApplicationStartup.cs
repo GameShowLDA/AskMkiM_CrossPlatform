@@ -1,4 +1,6 @@
 using Ask.Shared.Interfaces.Console;
+using AskMain.Startup.Hotkeys;
+using Avalonia.Controls;
 
 namespace AskMain.Startup;
 
@@ -16,16 +18,23 @@ public sealed class ApplicationStartup
   /// </summary>
   private IDeveloperConsole? _developerConsole;
 
+  private GlobalHotkeyRegistrar? _hotkeyRegistrar;
+  
   /// <summary>
   /// Выполняет стартовую инициализацию приложения.
   /// 
   /// Метод предназначен для вызова один раз при запуске приложения.
   /// Здесь последовательно запускаются все стартовые модули приложения.
   /// </summary>
-  public void Run()
+  public void Run(TopLevel topLevel)
   {
     var consoleStartup = new DeveloperConsoleStartup();
     _developerConsole = consoleStartup.Run();
+    
+    var hotkey = new DeveloperConsoleHotkey(_developerConsole);
+    _hotkeyRegistrar = new GlobalHotkeyRegistrar(
+      topLevel,
+      hotkey.OnKeyDown);
   }
 
   /// <summary>
